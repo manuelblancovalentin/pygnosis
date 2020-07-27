@@ -26,3 +26,6 @@ HOLDERS
 """ Create log object to keep track of warnings, errors, etc. """
 from .utils.logging import LOG
 LOG_HISTORY = LOG()
+
+""" Valid projections for matplotlib plotting """
+VALID_PYPLOT_PROJECTIONS = {None, 'aitoff', 'hammer', 'lambert', 'mollweide', 'polar', 'rectilinear'}
