@@ -29,7 +29,7 @@ __DEFAULT_ENVIRONMENT_NUM_STEPS__ = 1e5
 
 """ Definition of an simulation class """
 class Simulation(object):
-    def __init__(self, system, **kwargs):
+    def __init__(self, system, with_respect_to = None, **kwargs):
         """
         :param timestep: Time step in seconds. This parameter is used to compute the interactions between the
                          environment and any components inside it.
@@ -48,7 +48,7 @@ class Simulation(object):
         self.__setup_timing__(kw_parser)
 
         """ Environment Variables (which determine the state of the system at any given time) """
-        self.states = {vn: np.zeros(self.num_steps+1,*system.vars['x'].shape.as_list()) for vn in system.vars}
+        self.states = {vn: np.zeros((self.num_steps+1,*system.vars[vn].shape.as_list())) for vn in system.vars}
         self.system = system
 
 
@@ -101,6 +101,10 @@ class Simulation(object):
 
             """ Compute current_state for systems inside environment """
             current_state, _ = self.system(self.timestep)
+
+            if hasattr(self.system,'t'):
+                getattr(self.system,'t').assign([self.timestep*self.step])
+
             self.step += 1
             return current_state
         else:
@@ -240,12 +244,16 @@ class System(tf.Module):
         """ Create References for all variables in references """
         __refs__ = dict()
 
+        """ If references are empty, add time """
+        if len(references) == 0:
+            references = {'t': 0.0}
+
         """ Create meshgrid first """
         mesh = np.meshgrid(*tuple([references[vn] for vn in references]))
         for ivn, vn in enumerate(references):
             ref = references[vn]
             if not isinstance(ref, tf.Variable):
-                ref = tf.constant(mesh[ivn], name = vn, dtype = 'float64')
+                ref = tf.Variable(mesh[ivn], name = vn, dtype = 'float64')
             __refs__[vn] = ref
 
             """ Make sure to link attribute 'vn' in the Module so we can access it later """
