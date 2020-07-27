@@ -174,17 +174,17 @@ class Simulation(object):
                 pygnosis.settings.LOG_HISTORY('info', f'Environment num_steps set to default value: {self.num_steps}')
                 pygnosis.settings.LOG_HISTORY('info', f'Environment timespan set to calculated value: {self.timespan}')
 
-    """ Plot methods """
-    def scatter(self, *vars, projection = None, **plt_kwargs):
+
+    """ PLOT METHODS """
+    def __plotter__(self, plot_fn, *vars, projection = None, **plt_kwargs):
         """
         :param vars:
         :param projection:
         :param plt_kwargs:
         :return:
         """
-
         """ Make sure we only have at most 3 vars to plot """
-        if len(vars) > 3:
+        if (len(vars) > 3) and plot_fn in ('scatter'):
             pygnosis.settings.LOG_HISTORY('error',
                                           f'Too many variables to plot. Maximum number is 3 but a total of {len(vars)} were passed.')
 
@@ -197,21 +197,34 @@ class Simulation(object):
 
         if projection is None:
             """ Deduce from len(vars) """
-            if len(vars) == 3:
+            if len(vars) == 3 and plot_fn != 'plot':
                 projection = '3d'
 
         """ Get states for each var """
-        vars = [self.states[vn] for vn in vars]
+        var_names = vars
+        vars = [self.states[vn] if isinstance(vn,str) else vn for vn in vars]
 
         """ Init figure """
         fig = plt.figure()
         ax = fig.gca(projection = projection)
 
         """ Build plot """
-        ax.scatter(*vars, **plt_kwargs)
+        art = getattr(ax,plot_fn)(*vars, **plt_kwargs)
+        if plot_fn == 'plot':
+            plt.legend(iter(art), [var_names[2*i+1] for i in range(int(len(vars)//2))])
 
         """ Return axis and figure """
         return fig, ax
+
+    """ Plot methods """
+    def scatter(self, *vars, projection = None, **plt_kwargs):
+        return self.__plotter__('scatter', *vars, projection = projection, **plt_kwargs)
+
+
+    """ Plot method """
+    def plot(self, *vars, projection = None, **plt_kwargs):
+        return self.__plotter__('plot', *vars, projection = projection, **plt_kwargs)
+
 
 
 """  (dynamic) System definition """
