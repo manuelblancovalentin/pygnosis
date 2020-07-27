@@ -1,4 +1,8 @@
 """"""
+""" Interactive plots """
+import matplotlib
+matplotlib.use('MacOSX')
+
 """ Basic modules """
 import numpy as np
 
@@ -67,13 +71,10 @@ sim = pygnosis.Simulation(sys, timestep = 0.01, timespan = 40.0)
 """ Run simulation """
 states = sim()
 
-""" Plot variables now """
-import matplotlib.pyplot as plt
+""" Plot """
 from matplotlib import cm
 t = sim.time
-fig = plt.figure()
-ax = fig.gca(projection='3d')
-ax.scatter(states['x'], states['y'], states['z'], s = 1, c = cm.gnuplot2((t-t.min())/(t.ptp())))
-ax.plot(states['x'],states['y'],states['z'],'k-',lw=1,alpha=.2)
-plt.show()
+ax, fig = sim.scatter('x','y','z', s = 1, c = cm.gnuplot2((t-t.min())/(t.ptp())))
+
+
 
