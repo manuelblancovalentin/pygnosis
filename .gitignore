@@ -1,0 +1,5 @@
+
+*.iml
+*.xml
+pygnosis/.DS_Store
+*.pyc
