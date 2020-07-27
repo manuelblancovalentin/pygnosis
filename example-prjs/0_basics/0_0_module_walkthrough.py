@@ -71,10 +71,11 @@ sim = pygnosis.Simulation(sys, timestep = 0.01, timespan = 40.0)
 """ Run simulation """
 states = sim()
 
-""" Plot """
+""" 3-D Scatter """
 from matplotlib import cm
 t = sim.time
 ax, fig = sim.scatter('x','y','z', s = 1, c = cm.gnuplot2((t-t.min())/(t.ptp())))
 
-
+""" Plot lines """
+ax, fig = sim.plot(t,'x',t,'y',t,'z')
 
