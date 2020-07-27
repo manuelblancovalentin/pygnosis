@@ -70,7 +70,14 @@ class LOG():
 
         """ print according to verbosity """
         if pygnosis.settings.VERBOSITY >= msg.min_verbosity:
-            print(f'@{msg.time.strftime("%H:%M:%S")} [{msg.prefix}] - {msg.message}')
+            msg_txt = f'@{msg.time.strftime("%H:%M:%S")} [{msg.prefix}] - {msg.message}'
             msg.printed = True
+            if isinstance(msg,ERROR):
+                raise ValueError(msg_txt)
+            else:
+                print(msg_txt)
+
+
+
 
 
