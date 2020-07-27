@@ -11,6 +11,9 @@ PyGnosis v0.0.1
 import numpy as np
 import tqdm as tqdm
 
+""" Visualization """
+import matplotlib.pyplot as plt
+
 """ Tensorflow """
 import tensorflow as tf
 
@@ -170,6 +173,45 @@ class Simulation(object):
                 pygnosis.settings.LOG_HISTORY('info', f'Environment timestep set to{extra} value: {self.timestep}')
                 pygnosis.settings.LOG_HISTORY('info', f'Environment num_steps set to default value: {self.num_steps}')
                 pygnosis.settings.LOG_HISTORY('info', f'Environment timespan set to calculated value: {self.timespan}')
+
+    """ Plot methods """
+    def scatter(self, *vars, projection = None, **plt_kwargs):
+        """
+        :param vars:
+        :param projection:
+        :param plt_kwargs:
+        :return:
+        """
+
+        """ Make sure we only have at most 3 vars to plot """
+        if len(vars) > 3:
+            pygnosis.settings.LOG_HISTORY('error',
+                                          f'Too many variables to plot. Maximum number is 3 but a total of {len(vars)} were passed.')
+
+        if projection not in pygnosis.settings.VALID_PYPLOT_PROJECTIONS:
+            pygnosis.settings.LOG_HISTORY('warning',
+                                          f'Invalid projection {projection}. Valid types are: {", ".join(pygnosis.settings.VALID_PYPLOT_PROJECTIONS)}. '\
+                                          f'Setting to default "None" and proceeding.')
+
+            projection = None
+
+        if projection is None:
+            """ Deduce from len(vars) """
+            if len(vars) == 3:
+                projection = '3d'
+
+        """ Get states for each var """
+        vars = [self.states[vn] for vn in vars]
+
+        """ Init figure """
+        fig = plt.figure()
+        ax = fig.gca(projection = projection)
+
+        """ Build plot """
+        ax.scatter(*vars, **plt_kwargs)
+
+        """ Return axis and figure """
+        return fig, ax
 
 
 """  (dynamic) System definition """
