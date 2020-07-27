@@ -22,10 +22,16 @@ VERBOSITY = 3
 """ 
 HOLDERS 
 """
-
 """ Create log object to keep track of warnings, errors, etc. """
 from .utils.logging import LOG
 LOG_HISTORY = LOG()
 
 """ Valid projections for matplotlib plotting """
 VALID_PYPLOT_PROJECTIONS = {None, 'aitoff', 'hammer', 'lambert', 'mollweide', 'polar', 'rectilinear'}
+
+""" Set pyplot backend """
+import matplotlib, platform
+if platform.system() == 'Darwin':
+    matplotlib.use('MacOSX')
+LOG_HISTORY('info', f'Setting up matplotlib backend to {matplotlib.get_backend()}.')
+
