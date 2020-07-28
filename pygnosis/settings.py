@@ -33,5 +33,5 @@ VALID_PYPLOT_PROJECTIONS = {None, 'aitoff', 'hammer', 'lambert', 'mollweide', 'p
 import matplotlib, platform
 if platform.system() == 'Darwin':
     matplotlib.use('MacOSX')
-LOG_HISTORY('info', f'Setting up matplotlib backend to {matplotlib.get_backend()}.')
+#LOG_HISTORY('info', f'Setting up matplotlib backend to {matplotlib.get_backend()}.')
 
