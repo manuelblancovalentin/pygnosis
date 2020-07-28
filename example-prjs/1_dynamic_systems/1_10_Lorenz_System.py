@@ -13,9 +13,9 @@ beta = 8.0/3.0
 
 """ Create PyGnosis System """
 references = {}
-variables = {'x': [1.0], # rate of convection, formally 'x'
-             'y': [1.0], # horizontal temperature variation, formally 'y'
-             'z': [1.0]  # vertical temperature variation, formally 'z'
+variables = {'x': [[1.0]], # rate of convection, formally 'x'
+             'y': [[1.0]], # horizontal temperature variation, formally 'y'
+             'z': [[1.0]]  # vertical temperature variation, formally 'z'
              }
 sys = pygnosis.System(references, variables)
 
